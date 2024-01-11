@@ -1,0 +1,15 @@
+# Use the official Python Slim image
+FROM python:slim
+
+# Set the working directory inside the container
+WORKDIR /app
+
+# install requirements
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+
+# Copy the Python script into the container
+COPY main.py .
+
+# Run the Python script
+CMD ["python", "main.py"]

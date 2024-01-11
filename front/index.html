@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>GET Request Example</title>
+</head>
+<body>
+  <h1>GET Request Example</h1>
+  <button onclick="makeRequest()">Make Request</button>
+  <div id="result"></div>
+
+  <script>
+    function makeRequest() {
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', 'http://localhost:3000', true);
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4) {
+          if (xhr.status === 200) {
+            var response = xhr.responseText;
+            if (response === 'Hello, World!') {
+              document.getElementById('result').innerHTML = 'It works';
+            } else {
+              document.getElementById('result').innerHTML = 'Unexpected response: ' + response;
+            }
+          } else {
+            document.getElementById('result').innerHTML = 'Error: ' + xhr.status;
+          }
+        }
+      };
+      xhr.send();
+    }
+  </script>
+</body>
+</html>

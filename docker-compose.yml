@@ -1,0 +1,54 @@
+version: '3'
+
+services:
+  python-app:
+    build:
+      context: ./python-test-app
+      dockerfile: dockerfile
+    depends_on:
+      - mysql-db
+      - nodejs-backend
+    networks:
+      - customNetwork
+
+  mysql-db:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      # MYSQL_DATABASE: your_database_name
+      MYSQL_USER: your_mysql_user
+      MYSQL_PASSWORD: your_mysql_password
+    ports:
+      - "3306:3306"
+    hostname: mysql-db
+    networks:
+      - customNetwork
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-ppassword"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+
+  nodejs-backend:
+    build:
+      context: ./back
+      dockerfile: dockerfile
+    environment:
+      MYSQL_HOST: mysql-db
+      MYSQL_PORT: 3306
+      MYSQL_USER: your_mysql_user
+      MYSQL_PASSWORD: your_mysql_password
+      MYSQL_ROOT_PASSWORD: password
+      # MYSQL_DATABASE: your_database_name
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mysql-db
+    hostname: nodejs-backend
+    networks:
+      - customNetwork
+    
+
+networks:
+  customNetwork:
+    driver: bridge
